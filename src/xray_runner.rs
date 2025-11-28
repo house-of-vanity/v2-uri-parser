@@ -64,26 +64,6 @@ impl XrayRunner {
 
         Ok(())
     }
-
-    pub fn is_running(&mut self) -> bool {
-        if let Some(process) = &mut self.process {
-            match process.try_wait() {
-                Ok(Some(_)) => {
-                    // Process has exited
-                    self.process = None;
-                    false
-                }
-                Ok(None) => true, // Process is still running
-                Err(_) => {
-                    // Error checking status, assume not running
-                    self.process = None;
-                    false
-                }
-            }
-        } else {
-            false
-        }
-    }
 }
 
 impl Drop for XrayRunner {
