@@ -76,7 +76,7 @@ jobs:
         shell: bash
 
       - name: Strip binary
-        if: runner.os != 'Windows'
+        if: runner.os != 'Windows' && !matrix.use_cross
         run: strip target/${{ matrix.target }}/release/${{ steps.binary.outputs.name }}
 
       - name: Package
