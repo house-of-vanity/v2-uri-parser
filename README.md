@@ -16,6 +16,8 @@ Options:
       --socksport <PORT>  Optional SOCKS5 proxy port for inbound
       --httpport <PORT>   Optional HTTP proxy port for inbound
       --get-metadata      Only print config meta data
+      --run                 Run xray-core with the generated config
+      --xray-binary <PATH>  Path to xray-core binary (default: xray from PATH)
   -h, --help              Print help
   -V, --version           Print version
 ```
