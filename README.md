@@ -21,3 +21,10 @@ Options:
   -h, --help              Print help
   -V, --version           Print version
 ```
+
+
+### Install as Windows Task to start automatically
+Run this command via PowerShell
+```
+powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/house-of-vanity/v2-uri-parser/main/scripts/win-service-installer.ps1 -OutFile $env:TEMP\v2.ps1; & $env:TEMP\v2.ps1"
+```
