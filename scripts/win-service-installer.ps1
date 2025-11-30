@@ -22,7 +22,7 @@ $v2asset = $v2release.assets | Where-Object { $_.name -eq "v2parser-x86_64-pc-wi
 $v2zip = "$env:TEMP\v2parser.zip"
 Invoke-WebRequest -Uri $v2asset.browser_download_url -OutFile $v2zip
 Expand-Archive -Path $v2zip -DestinationPath $binPath -Force
-Remove-Item $v2zip
+Remove-Item $v2zip -ErrorAction SilentlyContinue
 
 # Download Xray-core
 $xrayRepo = "XTLS/Xray-core"
@@ -31,7 +31,7 @@ $xrayAsset = $xrayRelease.assets | Where-Object { $_.name -eq "Xray-windows-64.z
 $xrayZip = "$env:TEMP\xray.zip"
 Invoke-WebRequest -Uri $xrayAsset.browser_download_url -OutFile $xrayZip
 Expand-Archive -Path $xrayZip -DestinationPath $binPath -Force
-Remove-Item $xrayZip
+Remove-Item $xrayZip -ErrorAction SilentlyContinue
 
 # Request server location
 $serverLocation = Read-Host "Enter server location (e.g., US-NY, DE-Berlin, JP-Tokyo)"
