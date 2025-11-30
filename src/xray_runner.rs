@@ -72,6 +72,7 @@ impl XrayRunner {
 
 impl Drop for XrayRunner {
     fn drop(&mut self) {
+        #[allow(unused_mut)]
         if let Some(mut process) = self.process.take() {
             #[cfg(unix)]
             {
@@ -97,7 +98,7 @@ pub async fn wait_for_shutdown_signal() {
         use signal_hook::consts::signal::*;
         use signal_hook_tokio::Signals;
 
-        let mut signals = Signals::new(&[SIGINT, SIGTERM]).expect("Failed to create signals");
+        let mut signals = Signals::new([SIGINT, SIGTERM]).expect("Failed to create signals");
 
         while let Some(signal) = signals.next().await {
             match signal {
