@@ -5,7 +5,7 @@ use crate::{
     parser::shadow_socks::models,
     utils::{url_decode, url_decode_str},
 };
-use base64::{engine::general_purpose, Engine};
+use base64::{Engine, engine::general_purpose};
 
 pub fn get_data(uri: &str) -> RawData {
     let data = uri.split_once("ss://").unwrap().1;

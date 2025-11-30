@@ -1,4 +1,4 @@
-use clap::{value_parser, Arg, Command};
+use clap::{Arg, Command, value_parser};
 pub mod config_models;
 mod parser;
 pub mod utils;
@@ -54,7 +54,10 @@ async fn main() {
     let httpport = matches.get_one::<u16>("httpport").copied();
     let get_metadata = matches.get_flag("get_metadata");
     let run_mode = matches.get_flag("run");
-    let xray_binary = matches.get_one::<String>("xray_binary").map(|s| s.as_str()).unwrap_or("xray-core");
+    let xray_binary = matches
+        .get_one::<String>("xray_binary")
+        .map(|s| s.as_str())
+        .unwrap_or("xray-core");
 
     if get_metadata {
         print!("{}", parser::get_metadata(uri));

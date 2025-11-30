@@ -1,7 +1,7 @@
 use crate::config_models::RawData;
 use crate::parser::vmess::models::VmessAddress;
 use crate::utils::{get_parameter_value, url_decode, url_decode_str};
-use base64::{engine::general_purpose, Engine};
+use base64::{Engine, engine::general_purpose};
 use http::Uri;
 use serde_json::Value;
 

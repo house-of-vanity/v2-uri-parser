@@ -1,7 +1,7 @@
-use std::process::Stdio;
-use tokio::process::{Child, Command};
-use tempfile::NamedTempFile;
 use std::io::Write;
+use std::process::Stdio;
+use tempfile::NamedTempFile;
+use tokio::process::{Child, Command};
 
 pub struct XrayRunner {
     process: Option<Child>,
@@ -16,7 +16,11 @@ impl XrayRunner {
         }
     }
 
-    pub async fn start(&mut self, config_json: &str, xray_binary: &str) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn start(
+        &mut self,
+        config_json: &str,
+        xray_binary: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         // Create temporary config file with .json extension
         let mut temp_file = NamedTempFile::with_suffix(".json")?;
         temp_file.write_all(config_json.as_bytes())?;
@@ -27,10 +31,10 @@ impl XrayRunner {
         // Start xray-core process
         let mut cmd = Command::new(xray_binary);
         cmd.arg("-config")
-           .arg(&config_path)
-           .stdin(Stdio::null())
-           .stdout(Stdio::inherit())
-           .stderr(Stdio::inherit());
+            .arg(&config_path)
+            .stdin(Stdio::null())
+            .stdout(Stdio::inherit())
+            .stderr(Stdio::inherit());
 
         let child = cmd.spawn()?;
 
@@ -89,9 +93,9 @@ impl Drop for XrayRunner {
 pub async fn wait_for_shutdown_signal() {
     #[cfg(unix)]
     {
+        use futures::stream::StreamExt;
         use signal_hook::consts::signal::*;
         use signal_hook_tokio::Signals;
-        use futures::stream::StreamExt;
 
         let mut signals = Signals::new(&[SIGINT, SIGTERM]).expect("Failed to create signals");
 
