@@ -8,9 +8,7 @@ use serde_json::Value;
 pub fn get_data(uri: &str) -> RawData {
     let data = uri.split_once("vmess://").unwrap().1;
 
-    match general_purpose::STANDARD
-        .decode(url_decode_str(data).unwrap_or(String::from(data)))
-    {
+    match general_purpose::STANDARD.decode(url_decode_str(data).unwrap_or(String::from(data))) {
         Ok(decoded) => get_raw_data_from_base64(&decoded),
         Err(_) => get_raw_data_from_uri(data),
     }

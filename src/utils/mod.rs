@@ -24,8 +24,5 @@ pub fn parse_raw_json(input: &str) -> Option<serde_json::Value> {
 }
 
 pub fn get_parameter_value(query: &Vec<(&str, &str)>, param: &str) -> Option<String> {
-    query
-        .iter()
-        .find(|q| q.0 == param)
-        .map(|q| q.1.to_string())
+    query.iter().find(|q| q.0 == param).map(|q| q.1.to_string())
 }

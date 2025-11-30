@@ -21,13 +21,13 @@ pub fn get_metadata(uri: &str) -> String {
         port: data.port,
         protocol,
     };
-    
+
     serde_json::to_string(&meta_data).unwrap()
 }
 
 pub fn create_json_config(uri: &str, socks_port: Option<u16>, http_port: Option<u16>) -> String {
     let config = create_config(uri, socks_port, http_port);
-    
+
     serde_json::to_string(&config).unwrap()
 }
 
@@ -42,7 +42,7 @@ pub fn create_config(
             socks_port,
             http_port,
         });
-    
+
     config_models::Config {
         outbounds: vec![outbound_object],
         inbounds: inbound_config,
@@ -55,8 +55,6 @@ pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
     let network_type = data.r#type.clone().unwrap_or(String::from(""));
     let allow_insecure = data.allowInsecure == Some(String::from("true"))
         || data.allowInsecure == Some(String::from("1"));
-
-    
 
     Outbound {
         protocol: name,
