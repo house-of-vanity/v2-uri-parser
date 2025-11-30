@@ -3,7 +3,7 @@ mod models;
 use crate::config_models::*;
 
 pub fn create_outbound_settings(data: &RawData) -> OutboundSettings {
-    return OutboundSettings::Vmess(VmessOutboundSettings {
+    OutboundSettings::Vmess(VmessOutboundSettings {
         vnext: vec![VnextServerObject {
             port: data.port,
             address: data.address.clone(),
@@ -15,5 +15,5 @@ pub fn create_outbound_settings(data: &RawData) -> OutboundSettings {
                 security: data.vnext_security.clone(),
             }]),
         }],
-    });
+    })
 }

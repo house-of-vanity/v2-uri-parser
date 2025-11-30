@@ -3,7 +3,7 @@ mod models;
 use crate::config_models::*;
 
 pub fn create_outbound_settings(data: &RawData) -> OutboundSettings {
-    return OutboundSettings::Socks(SocksOutboundSettings {
+    OutboundSettings::Socks(SocksOutboundSettings {
         servers: vec![SocksServerObject {
             users: match (&data.username, &data.uuid) {
                 (Some(username), Some(uuid)) => Some(vec![SocksUser {
@@ -16,5 +16,5 @@ pub fn create_outbound_settings(data: &RawData) -> OutboundSettings {
             port: data.port,
             level: Some(0),
         }],
-    });
+    })
 }

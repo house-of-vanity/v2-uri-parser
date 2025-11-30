@@ -1,17 +1,17 @@
 pub mod inbound_generator;
 
 pub fn url_decode_str(value: &str) -> Option<String> {
-    return urlencoding::decode(value)
+    urlencoding::decode(value)
         .ok()
-        .map(|decoded| decoded.into_owned());
+        .map(|decoded| decoded.into_owned())
 }
 
 pub fn url_decode(value: Option<String>) -> Option<String> {
-    return value.and_then(|s| {
+    value.and_then(|s| {
         urlencoding::decode(&s)
             .ok()
             .map(|decoded| decoded.into_owned())
-    });
+    })
 }
 
 pub fn parse_raw_json(input: &str) -> Option<serde_json::Value> {
@@ -24,8 +24,8 @@ pub fn parse_raw_json(input: &str) -> Option<serde_json::Value> {
 }
 
 pub fn get_parameter_value(query: &Vec<(&str, &str)>, param: &str) -> Option<String> {
-    return query
+    query
         .iter()
-        .find(|q| String::from(q.0) == String::from(param))
-        .map(|q| q.1.to_string());
+        .find(|q| q.0 == param)
+        .map(|q| q.1.to_string())
 }

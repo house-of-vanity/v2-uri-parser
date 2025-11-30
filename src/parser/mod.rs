@@ -18,17 +18,17 @@ pub fn get_metadata(uri: &str) -> String {
         name: data.remarks,
         host: data.host.clone(),
         address: data.address.clone(),
-        port: data.port.clone(),
+        port: data.port,
         protocol,
     };
-    let serialized = serde_json::to_string(&meta_data).unwrap();
-    return serialized;
+    
+    serde_json::to_string(&meta_data).unwrap()
 }
 
 pub fn create_json_config(uri: &str, socks_port: Option<u16>, http_port: Option<u16>) -> String {
     let config = create_config(uri, socks_port, http_port);
-    let serialized = serde_json::to_string(&config).unwrap();
-    return serialized;
+    
+    serde_json::to_string(&config).unwrap()
 }
 
 pub fn create_config(
@@ -42,11 +42,11 @@ pub fn create_config(
             socks_port,
             http_port,
         });
-    let config = config_models::Config {
+    
+    config_models::Config {
         outbounds: vec![outbound_object],
         inbounds: inbound_config,
-    };
-    return config;
+    }
 }
 
 pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
@@ -56,7 +56,9 @@ pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
     let allow_insecure = data.allowInsecure == Some(String::from("true"))
         || data.allowInsecure == Some(String::from("1"));
 
-    let outbound = Outbound {
+    
+
+    Outbound {
         protocol: name,
         tag: String::from("proxy"),
         streamSettings: StreamSettings {
@@ -79,7 +81,7 @@ pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
             } else {
                 None
             },
-            wsSettings: if network_type == String::from("ws") {
+            wsSettings: if network_type == "ws" {
                 Some(WsSettings {
                     Host: data.host.clone(),
                     path: data.path.clone(),
@@ -88,7 +90,7 @@ pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
             } else {
                 None
             },
-            tcpSettings: if network_type == String::from("tcp") {
+            tcpSettings: if network_type == "tcp" {
                 Some(TCPSettings {
                     header: Some(TCPHeader {
                         r#type: Some(data.header_type.unwrap_or(String::from("none"))),
@@ -109,7 +111,7 @@ pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
             } else {
                 None
             },
-            grpcSettings: if network_type == String::from("grpc") {
+            grpcSettings: if network_type == "grpc" {
                 Some(GRPCSettings {
                     authority: data.authority,
                     multiMode: Some(false),
@@ -118,7 +120,7 @@ pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
             } else {
                 None
             },
-            quicSettings: if network_type == String::from("quic") {
+            quicSettings: if network_type == "quic" {
                 Some(QuicSettings {
                     header: Some(NonHeaderObject {
                         r#type: Some(String::from("none")),
@@ -129,7 +131,7 @@ pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
             } else {
                 None
             },
-            kcpSettings: if network_type == String::from("kcp") {
+            kcpSettings: if network_type == "kcp" {
                 Some(KCPSettings {
                     mtu: None,
                     tti: None,
@@ -143,7 +145,7 @@ pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
             } else {
                 None
             },
-            xhttpSettings: if network_type == String::from("xhttp") {
+            xhttpSettings: if network_type == "xhttp" {
                 Some(XHTTPSettings {
                     host: data.host.clone(),
                     path: data.path.clone(),
@@ -155,14 +157,12 @@ pub fn create_outbound_object(uri: &str) -> config_models::Outbound {
             },
         },
         settings: outbound_settings,
-    };
-
-    return outbound;
+    }
 }
 
 fn get_uri_data(uri: &str) -> (String, RawData, OutboundSettings) {
     let protocol = uri_identifier::get_uri_protocol(uri);
-    return match protocol {
+    match protocol {
         Some(uri_identifier::Protocols::Vless) => {
             let d = vless::data::get_data(uri);
             let s = vless::create_outbound_settings(&d);
@@ -194,5 +194,5 @@ fn get_uri_data(uri: &str) -> (String, RawData, OutboundSettings) {
         None => {
             panic!("The protocol is not supported");
         }
-    };
+    }
 }

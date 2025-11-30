@@ -12,7 +12,7 @@ pub fn get_data(uri: &str) -> RawData {
     let (raw_data, name) = data.split_once("#").unwrap_or((data, ""));
     let (raw_uri, _) = raw_data.split_once("?").unwrap_or((raw_data, ""));
     let parsed_address = parse_socks_address(raw_uri);
-    return RawData {
+    RawData {
         remarks: url_decode(Some(String::from(name))).unwrap_or(String::from("")),
         username: url_decode(parsed_address.username),
         address: Some(parsed_address.address),
@@ -42,7 +42,7 @@ pub fn get_data(uri: &str) -> RawData {
         quic_security: None,
         allowInsecure: None,
         vnext_security: None,
-    };
+    }
 }
 
 fn parse_socks_address(raw_data: &str) -> models::SocksAddress {
@@ -54,7 +54,7 @@ fn parse_socks_address(raw_data: &str) -> models::SocksAddress {
 
     let parsed = address_wo_slash.parse::<Uri>().unwrap();
 
-    return match maybe_userinfo {
+    match maybe_userinfo {
         Some(userinfo) => {
             let url_decoded = url_decode_str(&userinfo).unwrap_or(userinfo);
             let username_and_password = general_purpose::STANDARD
@@ -64,7 +64,7 @@ fn parse_socks_address(raw_data: &str) -> models::SocksAddress {
                         std::str::from_utf8(&a).expect("Base64 did not yield a valid utf-8 string"),
                     )
                 })
-                .unwrap_or(String::from(url_decoded.clone()));
+                .unwrap_or(url_decoded.clone());
 
             let (username, password) = username_and_password
                 .split_once(":")
@@ -83,5 +83,5 @@ fn parse_socks_address(raw_data: &str) -> models::SocksAddress {
             address: parsed.host().unwrap().to_string(),
             port: parsed.port().unwrap().as_u16(),
         },
-    };
+    }
 }

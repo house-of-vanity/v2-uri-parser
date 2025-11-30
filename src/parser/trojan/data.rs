@@ -12,7 +12,7 @@ pub fn get_data(uri: &str) -> RawData {
     let parsed_address = parse_trojan_address(data.split_once("?").unwrap().0);
     let query: Vec<(&str, &str)> = querystring::querify(raw_query);
 
-    return RawData {
+    RawData {
         remarks: url_decode(Some(String::from(name))).unwrap_or(String::from("")),
         uuid: Some(parsed_address.uuid),
         port: Some(parsed_address.port),
@@ -42,7 +42,7 @@ pub fn get_data(uri: &str) -> RawData {
         allowInsecure: get_parameter_value(&query, "allowInsecure"),
         server_method: None,
         username: None,
-    };
+    }
 }
 
 fn parse_trojan_address(raw_data: &str) -> models::TrojanAddress {
@@ -56,9 +56,9 @@ fn parse_trojan_address(raw_data: &str) -> models::TrojanAddress {
 
     let parsed = address_wo_slash.parse::<Uri>().unwrap();
 
-    return models::TrojanAddress {
+    models::TrojanAddress {
         uuid: url_decode(Some(uuid)).unwrap(),
         address: parsed.host().unwrap().to_string(),
         port: parsed.port().unwrap().as_u16(),
-    };
+    }
 }

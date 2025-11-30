@@ -50,7 +50,7 @@ impl XrayRunner {
             println!("Stopping xray-core process...");
 
             // Try graceful shutdown first
-            if let Err(_) = process.kill().await {
+            if (process.kill().await).is_err() {
                 eprintln!("Failed to kill xray-core process gracefully");
             }
 
@@ -62,7 +62,7 @@ impl XrayRunner {
         }
 
         // Cleanup config file
-        if let Some(_) = self.config_file.take() {
+        if self.config_file.take().is_some() {
             println!("Cleaned up temporary config file");
         }
 

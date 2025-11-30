@@ -8,23 +8,22 @@ use serde_json::Value;
 pub fn get_data(uri: &str) -> RawData {
     let data = uri.split_once("vmess://").unwrap().1;
 
-    return match general_purpose::STANDARD
+    match general_purpose::STANDARD
         .decode(url_decode_str(data).unwrap_or(String::from(data)))
     {
         Ok(decoded) => get_raw_data_from_base64(&decoded),
         Err(_) => get_raw_data_from_uri(data),
-    };
+    }
 }
 
-fn get_raw_data_from_base64(decoded_base64: &Vec<u8>) -> RawData {
+fn get_raw_data_from_base64(decoded_base64: &[u8]) -> RawData {
     let json_str = std::str::from_utf8(decoded_base64).unwrap();
     let json = serde_json::from_str::<Value>(json_str).unwrap();
 
-    return RawData {
+    RawData {
         remarks: url_decode(get_str_field(&json, "ps")).unwrap_or(String::from("")),
         uuid: get_str_field(&json, "id"),
-        port: get_str_field(&json, "port")
-            .and_then(|s| Some(s.parse::<u16>().expect("port is not a number"))),
+        port: get_str_field(&json, "port").map(|s| s.parse::<u16>().expect("port is not a number")),
         address: get_str_field(&json, "add"),
         alpn: url_decode(get_str_field(&json, "alpn")),
         path: url_decode(get_str_field(&json, "path")),
@@ -59,11 +58,11 @@ fn get_raw_data_from_base64(decoded_base64: &Vec<u8>) -> RawData {
         allowInsecure: None,
         server_method: None,
         username: None,
-    };
+    }
 }
 
 fn get_str_field(json: &Value, field: &str) -> Option<String> {
-    return json.get(field).and_then(|v| v.as_str()).map(String::from);
+    json.get(field).and_then(|v| v.as_str()).map(String::from)
 }
 
 fn get_raw_data_from_uri(data: &str) -> RawData {
@@ -75,7 +74,7 @@ fn get_raw_data_from_uri(data: &str) -> RawData {
     let parsed_address = parse_vmess_address(data.split_once("?").unwrap().0);
     let query: Vec<(&str, &str)> = querystring::querify(raw_query);
 
-    return RawData {
+    RawData {
         remarks: url_decode(Some(String::from(name))).unwrap_or(String::from("")),
         uuid: Some(parsed_address.uuid),
         port: Some(parsed_address.port),
@@ -105,7 +104,7 @@ fn get_raw_data_from_uri(data: &str) -> RawData {
         allowInsecure: get_parameter_value(&query, "allowInsecure"),
         server_method: None,
         username: None,
-    };
+    }
 }
 
 fn parse_vmess_address(raw_data: &str) -> VmessAddress {
@@ -119,9 +118,9 @@ fn parse_vmess_address(raw_data: &str) -> VmessAddress {
 
     let parsed = address_wo_slash.parse::<Uri>().unwrap();
 
-    return VmessAddress {
+    VmessAddress {
         uuid: url_decode(Some(uuid)).unwrap(),
         address: parsed.host().unwrap().to_string(),
         port: parsed.port().unwrap().as_u16(),
-    };
+    }
 }

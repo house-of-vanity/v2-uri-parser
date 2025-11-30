@@ -12,7 +12,7 @@ pub fn get_data(uri: &str) -> RawData {
     let (raw_data, name) = data.split_once("#").unwrap_or((data, ""));
     let (raw_uri, _) = raw_data.split_once("?").unwrap_or((raw_data, ""));
     let parsed_address = parse_ss_address(raw_uri);
-    return RawData {
+    RawData {
         remarks: url_decode(Some(String::from(name))).unwrap_or(String::from("")),
         server_method: url_decode(Some(parsed_address.method)),
         address: Some(parsed_address.address),
@@ -42,7 +42,7 @@ pub fn get_data(uri: &str) -> RawData {
         allowInsecure: None,
         vnext_security: None,
         username: None,
-    };
+    }
 }
 
 fn parse_ss_address(raw_data: &str) -> models::ShadowSocksAddress {
@@ -65,10 +65,10 @@ fn parse_ss_address(raw_data: &str) -> models::ShadowSocksAddress {
         .split_once(":")
         .expect("No `:` found in the decoded base64");
 
-    return models::ShadowSocksAddress {
+    models::ShadowSocksAddress {
         method: String::from(method),
         password: String::from(password),
         address: parsed.host().unwrap().to_string(),
         port: parsed.port().unwrap().as_u16(),
-    };
+    }
 }
