@@ -3,7 +3,10 @@ $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIden
 
 if (-not $isAdmin) {
     Write-Host "Administrator rights required. Restarting..." -ForegroundColor Yellow
-    Start-Process powershell -Verb RunAs -ArgumentList "-ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`""
+    # Save script to temp file
+    $tempScript = "$env:TEMP\v2proxy-installer.ps1"
+    $MyInvocation.MyCommand.ScriptContents | Out-File -FilePath $tempScript -Encoding UTF8
+    Start-Process powershell -Verb RunAs -ArgumentList "-ExecutionPolicy Bypass -NoExit -File `"$tempScript`""
     exit
 }
 
@@ -105,4 +108,7 @@ $taskInfo = Get-ScheduledTaskInfo -TaskName $taskName
 Write-Host "`nTask '$taskName' created!" -ForegroundColor Green
 Write-Host "Status: $($task.State)" -ForegroundColor Cyan
 Write-Host "Last Run: $($taskInfo.LastRunTime)" -ForegroundColor Cyan
+Write-Host "Last Result: $($taskInfo.LastTaskResult)" -ForegroundColor Cyan
 Write-Host "Proxy is running on http://127.0.0.1:$port" -ForegroundColor Cyan
+
+Read-Host "`nPress Enter to exit"
